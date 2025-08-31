@@ -2,54 +2,42 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validation.Validator;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private HashMap<Integer, User> users = new HashMap<>();
-    private int id = 1;
-    private final Validator validator = new Validator();
 
-    /**
-     * Создание пользователя
-     */
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-        log.info("Добавления нового пользователя с именем {}", user.getName());
-        validator.userValidation(user);
-        user.setId(id++);
-        users.put(user.getId(), user);
-        return user;
+        return userService.addUser(user);
     }
 
-    /**
-     * Обновление пользователя
-     */
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        if (users.containsKey(user.getId())) {
-            log.info("Пользователь найден. Обновляем данные");
-            validator.userValidation(user);
-            users.put(user.getId(), user);
-            return user;
-        }
-        throw new ValidationException("Пользователь не найден");
+        return userService.updateUser(user);
     }
 
-    /**
-     * Получение списка всех пользователей
-     */
     @GetMapping
     public Collection<User> findAllUsers() {
-        log.info("Получение списка всех пользователей");
-        return users.values();
+        return userService.findAllUsers();
+    }
+
+    @GetMapping("/{userId}")
+    public User findUserById(@PathVariable int userId) {
+        return userService.findUserById(userId);
     }
 }
