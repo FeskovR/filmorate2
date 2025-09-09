@@ -16,7 +16,8 @@ public class Validator {
             throw new ValidationException("В логине не должно быть пробелов");
         }
 
-        if (user.getName() == null) {
+        if (user.getName() == null ||
+            user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
     }

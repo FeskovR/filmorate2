@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/users")
@@ -39,5 +42,25 @@ public class UserController {
     @GetMapping("/{userId}")
     public User findUserById(@PathVariable int userId) {
         return userService.findUserById(userId);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable int id, @PathVariable int friendId) {
+        return userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+        return userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public ArrayList<User> getAllUserFriends(@PathVariable int id) {
+        return userService.getAllUserFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public HashSet<User> getAllCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return userService.getAllCommonFriends(id, otherId);
     }
 }
