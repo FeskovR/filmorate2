@@ -57,7 +57,6 @@ public class FilmService {
 
     public ArrayList<Film> getTopFilms(int count) {
         log.info("Выводим топ {} фильмов по лайкам", count);
-        ArrayList<Film> res = filmStorage.getTopFilms(count);
         return filmStorage.getTopFilms(count);
     }
 }
