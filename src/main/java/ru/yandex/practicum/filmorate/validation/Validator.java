@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.validation;
 
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class Validator {
 
@@ -16,7 +18,8 @@ public class Validator {
             throw new ValidationException("В логине не должно быть пробелов");
         }
 
-        if (user.getName() == null) {
+        if (user.getName() == null ||
+            user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
     }
@@ -26,5 +29,13 @@ public class Validator {
         if (film.getReleaseDate().isBefore(filmBD)) {
             throw new ValidationException("Фильм не может быть выпущен до рождения кино");
         }
+    }
+
+    public void checkFilm(HashMap<Integer, Film> films, int id) {
+        if (!films.containsKey(id)) throw new EntityNotFoundException("Фильм не найден");
+    }
+
+    public void checkUser(HashMap<Integer, User> users, int id) {
+        if (!users.containsKey(id)) throw new EntityNotFoundException("Пользователь не найден");
     }
 }
