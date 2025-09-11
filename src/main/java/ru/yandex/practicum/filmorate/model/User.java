@@ -29,6 +29,8 @@ public class User {
     }
 
     public void deleteFriend(int id) {
-        friends.remove(friends.indexOf(id));
+        if (friends.contains(id)) {
+            friends.remove((Integer) id);
+        }
     }
 }
