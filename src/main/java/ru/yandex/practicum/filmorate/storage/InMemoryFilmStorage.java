@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 @Component
 @Slf4j
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
 
     private final HashMap<Integer, Film> films = new HashMap<>();
     private final Validator validator = new Validator();
@@ -72,7 +72,7 @@ public class InMemoryFilmStorage implements FilmStorage{
         return new ArrayList<>(films
                 .values()
                 .stream()
-                .sorted((Film a, Film b) -> {return b.getUsersLikes().size() - a.getUsersLikes().size();})
+                .sorted((Film a, Film b) -> b.getUsersLikes().size() - a.getUsersLikes().size())
                 .toList()
                 .subList(0, count)
         );
