@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.validation.Validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import java.util.HashSet;
 public class InMemoryUserStorage implements UserStorage {
 
     private HashMap<Integer, User> users = new HashMap<>();
+    private final Validator validator = new Validator();
 
     public User addUser(User user) {
         users.put(user.getId(), user);
@@ -28,7 +29,7 @@ public class InMemoryUserStorage implements UserStorage {
             users.put(user.getId(), user);
             return user;
         }
-        throw new ValidationException("Пользователь не найден");
+        throw new EntityNotFoundException("Пользователь не найден");
     }
 
     public Collection<User> findAllUsers() {
@@ -36,18 +37,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User findUserById(int id) {
-        checkUser(id);
+        validator.checkUser(users, id);
         return users.get(id);
     }
 
-    private void checkUser(int id) {
-        if (!users.containsKey(id)) throw new EntityNotFoundException("Пользователь не найден");
-    }
-
     public User addFriend(int id, int friendId) {
-        checkUser(id);
+        validator.checkUser(users, id);
         User user = findUserById(id);
-        checkUser(friendId);
+        validator.checkUser(users, friendId);
         User friend = findUserById(friendId);
         user.addFriend(friendId);
         friend.addFriend(id);
@@ -55,9 +52,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User deleteFriend(int id, int friendId) {
-        checkUser(id);
+        validator.checkUser(users, id);
         User user = findUserById(id);
-        checkUser(friendId);
+        validator.checkUser(users, friendId);
         User friend = findUserById(friendId);
         user.deleteFriend(friendId);
         friend.deleteFriend(id);

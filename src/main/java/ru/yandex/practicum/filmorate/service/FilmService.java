@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.validation.Validator;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -42,5 +43,21 @@ public class FilmService {
     public Film findFilmById(int id) {
         log.info("Возвращаем фильм по id");
         return filmStorage.findFilmById(id);
+    }
+
+    public Film addLikeToFilm(int id, int userId) {
+        log.info("Ставим лайк фильму с id {} от пользователя id {}", id, userId);
+        return filmStorage.addLikeToFilm(id, userId);
+    }
+
+    public Film removeLikeFromFilm(int id, int userId) {
+        log.info("Удаляем лайк с фильма с id {} от пользователя id {}", id, userId);
+        return filmStorage.removeLikeFromFilm(id, userId);
+    }
+
+    public ArrayList<Film> getTopFilms(int count) {
+        log.info("Выводим топ {} фильмов по лайкам", count);
+        ArrayList<Film> res = filmStorage.getTopFilms(count);
+        return filmStorage.getTopFilms(count);
     }
 }
